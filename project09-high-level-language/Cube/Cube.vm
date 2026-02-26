@@ -1,0 +1,601 @@
+function Cube.new 0
+    push constant 4
+    call Memory.alloc 1
+    pop pointer 0
+    push constant 0
+    pop this 2
+    push constant 0
+    pop this 3
+    push constant 1
+    call FixedMath.toFixed 1
+    push constant 100
+    call FixedMath.toFixed 1
+    push constant 1
+    call FixedMath.toFixed 1
+    call Matrix.createProjection 3
+    pop this 1
+    push constant 8
+    call Array.new 1
+    pop this 0
+    push constant 0
+    push this 0
+    add
+    push constant 1
+    neg
+    call FixedMath.toFixed 1
+    push constant 1
+    neg
+    call FixedMath.toFixed 1
+    push constant 1
+    neg
+    call FixedMath.toFixed 1
+    push constant 256
+    call Vector.new 4
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 1
+    push this 0
+    add
+    push constant 1
+    call FixedMath.toFixed 1
+    push constant 1
+    neg
+    call FixedMath.toFixed 1
+    push constant 1
+    neg
+    call FixedMath.toFixed 1
+    push constant 256
+    call Vector.new 4
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 2
+    push this 0
+    add
+    push constant 1
+    call FixedMath.toFixed 1
+    push constant 1
+    call FixedMath.toFixed 1
+    push constant 1
+    neg
+    call FixedMath.toFixed 1
+    push constant 256
+    call Vector.new 4
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 3
+    push this 0
+    add
+    push constant 1
+    neg
+    call FixedMath.toFixed 1
+    push constant 1
+    call FixedMath.toFixed 1
+    push constant 1
+    neg
+    call FixedMath.toFixed 1
+    push constant 256
+    call Vector.new 4
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 4
+    push this 0
+    add
+    push constant 1
+    neg
+    call FixedMath.toFixed 1
+    push constant 1
+    neg
+    call FixedMath.toFixed 1
+    push constant 1
+    call FixedMath.toFixed 1
+    push constant 256
+    call Vector.new 4
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 5
+    push this 0
+    add
+    push constant 1
+    call FixedMath.toFixed 1
+    push constant 1
+    neg
+    call FixedMath.toFixed 1
+    push constant 1
+    call FixedMath.toFixed 1
+    push constant 256
+    call Vector.new 4
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 6
+    push this 0
+    add
+    push constant 1
+    call FixedMath.toFixed 1
+    push constant 1
+    call FixedMath.toFixed 1
+    push constant 1
+    call FixedMath.toFixed 1
+    push constant 256
+    call Vector.new 4
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 7
+    push this 0
+    add
+    push constant 1
+    neg
+    call FixedMath.toFixed 1
+    push constant 1
+    call FixedMath.toFixed 1
+    push constant 1
+    call FixedMath.toFixed 1
+    push constant 256
+    call Vector.new 4
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push pointer 0
+    return
+function Cube.dispose 2
+    push argument 0
+    pop pointer 0
+    push constant 0
+    pop local 0
+label Cube_0
+    push local 0
+    push constant 8
+    lt
+    not
+    if-goto Cube_1
+    push local 0
+    push this 0
+    add
+    pop pointer 1
+    push that 0
+    pop local 1
+    push local 1
+    call Vector.dispose 1
+    pop temp 0
+    push local 0
+    push constant 1
+    add
+    pop local 0
+    goto Cube_0
+label Cube_1
+    push this 0
+    call Array.dispose 1
+    pop temp 0
+    push this 1
+    call Matrix.dispose 1
+    pop temp 0
+    push pointer 0
+    call Memory.deAlloc 1
+    pop temp 0
+    push constant 0
+    return
+function Cube.rotate 0
+    push argument 0
+    pop pointer 0
+    push this 2
+    push argument 1
+    add
+    pop this 2
+    push this 3
+    push argument 2
+    add
+    pop this 3
+    push constant 0
+    return
+function Cube.updateAndDraw 10
+    push argument 0
+    pop pointer 0
+    push this 2
+    call Matrix.createRotationX 1
+    pop local 0
+    push this 3
+    call Matrix.createRotationY 1
+    pop local 1
+    push constant 0
+    push constant 0
+    push constant 5
+    call FixedMath.toFixed 1
+    call Matrix.createTranslation 3
+    pop local 2
+    push local 1
+    push local 0
+    call Matrix.dot 2
+    pop local 3
+    push local 2
+    push local 3
+    call Matrix.dot 2
+    pop local 4
+    push constant 16
+    call Array.new 1
+    pop local 5
+    push constant 0
+    pop local 6
+label Cube_2
+    push local 6
+    push constant 8
+    lt
+    not
+    if-goto Cube_3
+    push local 6
+    push this 0
+    add
+    pop pointer 1
+    push that 0
+    pop local 7
+    push local 4
+    push local 7
+    call Matrix.multiplyVector 2
+    pop local 8
+    push this 1
+    push local 8
+    call Matrix.multiplyVector 2
+    pop local 9
+    push local 9
+    call Vector.getW 1
+    push constant 0
+    gt
+    not
+    if-goto Cube_5
+    push local 6
+    push constant 2
+    call Math.multiply 2
+    push local 5
+    add
+    push local 9
+    call Vector.getX 1
+    push local 9
+    call Vector.getW 1
+    call FixedMath.divide 2
+    call FixedMath.toInt 1
+    push constant 256
+    add
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push local 6
+    push constant 2
+    call Math.multiply 2
+    push constant 1
+    add
+    push local 5
+    add
+    push local 9
+    call Vector.getY 1
+    push local 9
+    call Vector.getW 1
+    call FixedMath.divide 2
+    call FixedMath.toInt 1
+    push constant 128
+    add
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    goto Cube_4
+label Cube_5
+label Cube_4
+    push local 8
+    call Vector.dispose 1
+    pop temp 0
+    push local 9
+    call Vector.dispose 1
+    pop temp 0
+    push local 6
+    push constant 1
+    add
+    pop local 6
+    goto Cube_2
+label Cube_3
+    push pointer 0
+    push local 5
+    call Cube.drawEdges 2
+    pop temp 0
+    push local 5
+    call Array.dispose 1
+    pop temp 0
+    push local 0
+    call Matrix.dispose 1
+    pop temp 0
+    push local 1
+    call Matrix.dispose 1
+    pop temp 0
+    push local 2
+    call Matrix.dispose 1
+    pop temp 0
+    push local 3
+    call Matrix.dispose 1
+    pop temp 0
+    push local 4
+    call Matrix.dispose 1
+    pop temp 0
+    push constant 0
+    return
+function Cube.drawEdges 0
+    push argument 0
+    pop pointer 0
+    push constant 0
+    push argument 1
+    add
+    pop pointer 1
+    push that 0
+    push constant 1
+    push argument 1
+    add
+    pop pointer 1
+    push that 0
+    push constant 2
+    push argument 1
+    add
+    pop pointer 1
+    push that 0
+    push constant 3
+    push argument 1
+    add
+    pop pointer 1
+    push that 0
+    call Screen.drawLine 4
+    pop temp 0
+    push constant 2
+    push argument 1
+    add
+    pop pointer 1
+    push that 0
+    push constant 3
+    push argument 1
+    add
+    pop pointer 1
+    push that 0
+    push constant 4
+    push argument 1
+    add
+    pop pointer 1
+    push that 0
+    push constant 5
+    push argument 1
+    add
+    pop pointer 1
+    push that 0
+    call Screen.drawLine 4
+    pop temp 0
+    push constant 4
+    push argument 1
+    add
+    pop pointer 1
+    push that 0
+    push constant 5
+    push argument 1
+    add
+    pop pointer 1
+    push that 0
+    push constant 6
+    push argument 1
+    add
+    pop pointer 1
+    push that 0
+    push constant 7
+    push argument 1
+    add
+    pop pointer 1
+    push that 0
+    call Screen.drawLine 4
+    pop temp 0
+    push constant 6
+    push argument 1
+    add
+    pop pointer 1
+    push that 0
+    push constant 7
+    push argument 1
+    add
+    pop pointer 1
+    push that 0
+    push constant 0
+    push argument 1
+    add
+    pop pointer 1
+    push that 0
+    push constant 1
+    push argument 1
+    add
+    pop pointer 1
+    push that 0
+    call Screen.drawLine 4
+    pop temp 0
+    push constant 8
+    push argument 1
+    add
+    pop pointer 1
+    push that 0
+    push constant 9
+    push argument 1
+    add
+    pop pointer 1
+    push that 0
+    push constant 10
+    push argument 1
+    add
+    pop pointer 1
+    push that 0
+    push constant 11
+    push argument 1
+    add
+    pop pointer 1
+    push that 0
+    call Screen.drawLine 4
+    pop temp 0
+    push constant 10
+    push argument 1
+    add
+    pop pointer 1
+    push that 0
+    push constant 11
+    push argument 1
+    add
+    pop pointer 1
+    push that 0
+    push constant 12
+    push argument 1
+    add
+    pop pointer 1
+    push that 0
+    push constant 13
+    push argument 1
+    add
+    pop pointer 1
+    push that 0
+    call Screen.drawLine 4
+    pop temp 0
+    push constant 12
+    push argument 1
+    add
+    pop pointer 1
+    push that 0
+    push constant 13
+    push argument 1
+    add
+    pop pointer 1
+    push that 0
+    push constant 14
+    push argument 1
+    add
+    pop pointer 1
+    push that 0
+    push constant 15
+    push argument 1
+    add
+    pop pointer 1
+    push that 0
+    call Screen.drawLine 4
+    pop temp 0
+    push constant 14
+    push argument 1
+    add
+    pop pointer 1
+    push that 0
+    push constant 15
+    push argument 1
+    add
+    pop pointer 1
+    push that 0
+    push constant 8
+    push argument 1
+    add
+    pop pointer 1
+    push that 0
+    push constant 9
+    push argument 1
+    add
+    pop pointer 1
+    push that 0
+    call Screen.drawLine 4
+    pop temp 0
+    push constant 0
+    push argument 1
+    add
+    pop pointer 1
+    push that 0
+    push constant 1
+    push argument 1
+    add
+    pop pointer 1
+    push that 0
+    push constant 8
+    push argument 1
+    add
+    pop pointer 1
+    push that 0
+    push constant 9
+    push argument 1
+    add
+    pop pointer 1
+    push that 0
+    call Screen.drawLine 4
+    pop temp 0
+    push constant 2
+    push argument 1
+    add
+    pop pointer 1
+    push that 0
+    push constant 3
+    push argument 1
+    add
+    pop pointer 1
+    push that 0
+    push constant 10
+    push argument 1
+    add
+    pop pointer 1
+    push that 0
+    push constant 11
+    push argument 1
+    add
+    pop pointer 1
+    push that 0
+    call Screen.drawLine 4
+    pop temp 0
+    push constant 4
+    push argument 1
+    add
+    pop pointer 1
+    push that 0
+    push constant 5
+    push argument 1
+    add
+    pop pointer 1
+    push that 0
+    push constant 12
+    push argument 1
+    add
+    pop pointer 1
+    push that 0
+    push constant 13
+    push argument 1
+    add
+    pop pointer 1
+    push that 0
+    call Screen.drawLine 4
+    pop temp 0
+    push constant 6
+    push argument 1
+    add
+    pop pointer 1
+    push that 0
+    push constant 7
+    push argument 1
+    add
+    pop pointer 1
+    push that 0
+    push constant 14
+    push argument 1
+    add
+    pop pointer 1
+    push that 0
+    push constant 15
+    push argument 1
+    add
+    pop pointer 1
+    push that 0
+    call Screen.drawLine 4
+    pop temp 0
+    push constant 0
+    return

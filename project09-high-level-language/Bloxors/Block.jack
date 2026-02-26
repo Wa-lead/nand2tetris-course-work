@@ -1,0 +1,86 @@
+/**
+ * Represents the player-controlled 1x2 block.
+ * (CORRECTED: Complies with Jack language rules)
+ */
+class Block {
+    field int x, y;
+    field int TILE_SIZE;
+    field int state;
+
+    // State constants are now just static variables.
+    static int STANDING;
+    static int FLAT_X;
+    static int FLAT_Y;
+
+    /** MUST be called once at the start of the game to set static values. */
+    function void init() {
+        let STANDING = 0;
+        let FLAT_X = 1;
+        let FLAT_Y = 2;
+        return;
+    }
+
+    constructor Block new(int startX, int startY) {
+        let x = startX;
+        let y = startY;
+        let state = STANDING;
+        let TILE_SIZE = 20;
+        return this;
+    }
+
+    method void dispose() { do Memory.deAlloc(this); return; }
+
+    // --- Getters for private fields ---
+    method int getX() { return x; }
+    method int getY() { return y; }
+    method int getState() { return state; }
+    function int getStandingState() { return STANDING; }
+    function int getFlatXState() { return FLAT_X; }
+    function int getFlatYState() { return FLAT_Y; }
+
+    method void draw() {
+        do Screen.setColor(true);
+        do Screen.drawRectangle(x*TILE_SIZE, y*TILE_SIZE, (x*TILE_SIZE)+TILE_SIZE, (y*TILE_SIZE)+TILE_SIZE);
+        if (state = FLAT_X) {
+            do Screen.drawRectangle((x+1)*TILE_SIZE, y*TILE_SIZE, (x+1)*TILE_SIZE+TILE_SIZE, y*TILE_SIZE+TILE_SIZE);
+        }
+        if (state = FLAT_Y) {
+            do Screen.drawRectangle(x*TILE_SIZE, (y+1)*TILE_SIZE, x*TILE_SIZE+TILE_SIZE, (y+1)*TILE_SIZE+TILE_SIZE);
+        }
+        return;
+    }
+
+    method void move(int direction) {
+        // Directions: 1=Up, 2=Down, 3=Left, 4=Right
+        if (state = STANDING) {
+            if (direction = 4) { let state = FLAT_X; let x = x + 1; }
+            if (direction = 3) { let state = FLAT_X; let x = x - 2; }
+            if (direction = 2) { let state = FLAT_Y; let y = y + 1; }
+            if (direction = 1) { let state = FLAT_Y; let y = y - 2; }
+        }
+        else { if (state = FLAT_X) {
+            if (direction = 4) { let state = STANDING; let x = x + 2; }
+            if (direction = 3) { let state = STANDING; let x = x - 1; }
+            if (direction = 2) { let y = y + 1; }
+            if (direction = 1) { let y = y - 1; }
+        }
+        else { // state must be FLAT_Y
+            if (direction = 4) { let x = x + 1; }
+            if (direction = 3) { let x = x - 1; }
+            if (direction = 2) { let state = STANDING; let y = y + 2; }
+            if (direction = 1) { let state = STANDING; let y = y - 1; }
+        }}
+        return;
+    }
+
+    method boolean isValidPosition(Level level) {
+        if (level.getTileType(x, y) = Level.getEmptyTile()) { return false; }
+        if (state = FLAT_X) {
+            if (level.getTileType(x + 1, y) = Level.getEmptyTile()) { return false; }
+        }
+        if (state = FLAT_Y) {
+            if (level.getTileType(x, y + 1) = Level.getEmptyTile()) { return false; }
+        }
+        return true;
+    }
+}

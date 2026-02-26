@@ -1,0 +1,110 @@
+/**
+ * Game Class - Manages the game state and main loop for the Bloxorz-style game.
+ * (CORRECTED: Highlights win/loss messages)
+ */
+class Game {
+    field Level level;
+    field Block block;
+    field boolean quit;
+    field boolean isWon;
+    field boolean isLost;
+
+    constructor Game new() {
+        let level = Level.new();
+        let block = Block.new(1, 4);
+        let quit = false;
+        let isWon = false;
+        let isLost = false;
+        return this;
+    }
+
+    method void dispose() {
+        do level.dispose();
+        do block.dispose();
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    method void run() {
+        var int key;
+        while (~quit) {
+            do draw();
+            let key = 0;
+            while (key = 0) { let key = Keyboard.keyPressed(); }
+            if (~(isWon | isLost)) { do handleInput(key); }
+            if (key = 140) { let quit = true; }
+            do Sys.wait(100);
+        }
+        return;
+    }
+
+    method void handleInput(int key) {
+        var int direction;
+        if (key = 131) { let direction = 1; }
+        if (key = 133) { let direction = 2; }
+        if (key = 130) { let direction = 3; }
+        if (key = 132) { let direction = 4; }
+        if (~(direction = 0)) {
+            do block.move(direction);
+            do checkGameState();
+        }
+        return;
+    }
+
+    method void checkGameState() {
+        if (~block.isValidPosition(level)) {
+            let isLost = true;
+            return;
+        }
+        if ((block.getState() = Block.getStandingState()) & (level.getTileType(block.getX(), block.getY()) = Level.getGoalTile())) {
+            let isWon = true;
+        }
+        return;
+    }
+    
+    /**
+     * Clears the screen and redraws all game elements and text.
+     */
+    method void draw() {
+        do Screen.setColor(false);
+        do Screen.drawRectangle(0, 0, 511, 255);
+
+        do level.draw();
+        do block.draw();
+
+        do Output.moveCursor(0,0);
+        do Output.printString("Use arrow keys to move. ESC to quit.");
+
+        // --- FIX IS HERE ---
+        // If the game is won, draw a highlighted message box.
+        if (isWon) {
+            // 1. Draw a black border for the box.
+            do Screen.setColor(true);
+            do Screen.drawRectangle(200, 110, 312, 130);
+            
+            // 2. Fill the inside of the box with white.
+            do Screen.setColor(false);
+            do Screen.drawRectangle(201, 111, 311, 129);
+
+            // 3. Place the cursor and print the message on top of the box.
+            do Output.moveCursor(11, 28);
+            do Output.printString("YOU WIN!");
+        }
+
+        // If the game is lost, draw a similar highlighted message box.
+        if (isLost) {
+            // 1. Draw a black border for the box.
+            do Screen.setColor(true);
+            do Screen.drawRectangle(200, 110, 312, 130);
+
+            // 2. Fill the inside of the box with white.
+            do Screen.setColor(false);
+            do Screen.drawRectangle(201, 111, 311, 129);
+
+            // 3. Place the cursor and print the message on top of the box.
+            do Output.moveCursor(11, 27);
+            do Output.printString("GAME OVER");
+        }
+        return;
+    }
+}

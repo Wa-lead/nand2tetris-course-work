@@ -1,0 +1,27 @@
+
+class Main {
+
+    /**
+     * The main function is where the program execution begins.
+     */
+    function void main() {
+        var Game game; // A variable to hold the game object.
+        
+        // 1. Initialize all static variables for every class. This is critical.
+        do Level.init();
+        do Block.init();
+        
+        // 2. Create a new instance of the game.
+        let game = Game.new();
+
+        // 3. Call the run() method to start the game loop.
+        //    Execution will stay here until the player quits the game.
+        do game.run();
+
+        // 4. After the game loop ends, dispose of the game object to free memory.
+        do game.dispose();
+
+        return; // End of the program.
+    }
+}
+

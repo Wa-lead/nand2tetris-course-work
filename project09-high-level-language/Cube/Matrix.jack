@@ -1,0 +1,91 @@
+/** A 4x4 Matrix library for 3D transformations. */
+class Matrix {
+    field Array data; // 16 integers (4x4)
+
+    constructor Matrix new() {
+        let data = Array.new(16);
+        return this;
+    }
+    method void dispose() { do data.dispose(); do Memory.deAlloc(this); return; }
+    method int get(int r, int c) { return data[(r*4)+c]; }
+    method void set(int r, int c, int val) { let data[(r*4)+c] = val; return; }
+
+    method Vector multiplyVector(Vector v) {
+        var Vector res;
+        var int x, y, z, w, t1, t2, t3, t4;
+        
+        let t1 = FixedMath.multiply(get(0,0), v.getX()); let t2 = FixedMath.multiply(get(0,1), v.getY());
+        let t3 = FixedMath.multiply(get(0,2), v.getZ()); let t4 = FixedMath.multiply(get(0,3), v.getW());
+        let x = t1 + t2 + t3 + t4;
+
+        let t1 = FixedMath.multiply(get(1,0), v.getX()); let t2 = FixedMath.multiply(get(1,1), v.getY());
+        let t3 = FixedMath.multiply(get(1,2), v.getZ()); let t4 = FixedMath.multiply(get(1,3), v.getW());
+        let y = t1 + t2 + t3 + t4;
+
+        let t1 = FixedMath.multiply(get(2,0), v.getX()); let t2 = FixedMath.multiply(get(2,1), v.getY());
+        let t3 = FixedMath.multiply(get(2,2), v.getZ()); let t4 = FixedMath.multiply(get(2,3), v.getW());
+        let z = t1 + t2 + t3 + t4;
+        
+        let t1 = FixedMath.multiply(get(3,0), v.getX()); let t2 = FixedMath.multiply(get(3,1), v.getY());
+        let t3 = FixedMath.multiply(get(3,2), v.getZ()); let t4 = FixedMath.multiply(get(3,3), v.getW());
+        let w = t1 + t2 + t3 + t4;
+        
+        let res = Vector.new(x, y, z, w);
+        return res;
+    }
+
+    method Matrix dot(Matrix other) {
+        var Matrix res; var int i, j, k, sum;
+        let res = Matrix.new(); let i = 0;
+        while (i < 4) {
+            let j = 0;
+            while (j < 4) {
+                let sum = 0; let k = 0;
+                while (k < 4) {
+                    let sum = sum + FixedMath.multiply(get(i, k), other.get(k, j));
+                    let k = k + 1;
+                }
+                do res.set(i, j, sum); let j = j + 1;
+            }
+            let i = i + 1;
+        }
+        return res;
+    }
+
+    function Matrix identity() {
+        var Matrix m; let m = Matrix.new();
+        do m.set(0,0, 256); do m.set(1,1, 256); do m.set(2,2, 256); do m.set(3,3, 256);
+        return m;
+    }
+
+    function Matrix createTranslation(int tx, int ty, int tz) {
+        var Matrix m; let m = Matrix.identity();
+        do m.set(0,3, tx); do m.set(1,3, ty); do m.set(2,3, tz);
+        return m;
+    }
+
+    function Matrix createRotationX(int angle) {
+        var Matrix m; var int s, c;
+        let m = Matrix.identity(); let s = Trig.sin(angle); let c = Trig.cos(angle);
+        do m.set(1,1, c); do m.set(1,2, -s);
+        do m.set(2,1, s); do m.set(2,2, c);
+        return m;
+    }
+
+    function Matrix createRotationY(int angle) {
+        var Matrix m; var int s, c;
+        let m = Matrix.identity(); let s = Trig.sin(angle); let c = Trig.cos(angle);
+        do m.set(0,0, c); do m.set(0,2, s);
+        do m.set(2,0, -s); do m.set(2,2, c);
+        return m;
+    }
+    
+    function Matrix createProjection(int fov, int z_far, int z_near) {
+        var Matrix m; var int f, q, qn;
+        let m = Matrix.new(); let f = fov; let q = FixedMath.divide(z_far, z_far - z_near);
+        let qn = -FixedMath.multiply(q, z_near);
+        do m.set(0,0, f); do m.set(1,1, f); do m.set(2,2, q);
+        do m.set(2,3, qn); do m.set(3,2, 256);
+        return m;
+    }
+}

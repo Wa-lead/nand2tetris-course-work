@@ -1,0 +1,104 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/5/CPU.hdl
+
+/**
+ * The Hack Central Processing unit (CPU).
+ * Parses the binary code in the instruction input and executes it according to the
+ * Hack machine language specification. In the case of a C-instruction, computes the
+ * function specified by the instruction. If the instruction specifies to read a memory
+ * value, the inM input is expected to contain this value. If the instruction specifies
+ * to write a value to the memory, sets the outM output to this value, sets the addressM
+ * output to the target address, and asserts the writeM output (when writeM = 0, any
+ * value may appear in outM).
+ * If the reset input is 0, computes the address of the next instruction and sets the
+ * pc output to that value. If the reset input is 1, sets pc to 0.
+ * Note: The outM and writeM outputs are combinational: they are affected by the
+ * instruction's execution during the current cycle. The addressM and pc outputs are
+ * clocked: although they are affected by the instruction's execution, they commit to
+ * their new values only in the next cycle.
+ */
+CHIP CPU {
+
+    IN  inM[16],         // M value input  (M = contents of RAM[A])
+        instruction[16], // Instruction for execution
+        reset;           // Signals whether to re-start the current
+                         // program (reset==1) or continue executing
+                         // the current program (reset==0).
+
+    OUT outM[16],        // M value output
+        writeM,          // Write to M?
+        addressM[15],    // Address in data memory (of M)
+        pc[15];          // address of next instruction
+
+    PARTS:
+    // Decode instruction type: A-instruction (isA) or C-instruction (isComp)
+    And(a=instruction[15], b=true, out=isComp);
+    Not(in=isComp, out=isA);
+
+    // Mux to select input for A-Register: instruction for A-type, ALU output for C-type.
+    Mux16(
+        a=instruction,
+        b=aluOut,
+        sel=isComp,
+        out=aValue
+    );
+
+    // Load A if it's an A-instruction OR a C-instruction with destination bit d1=1.
+    Or(a=isA, b=instruction[5], out=loadA);
+    ARegister(in=aValue, load=loadA, out=regA); // A-Register
+
+    // Load D if it's a C-instruction with destination bit d2=1.
+    And(a=isComp, b=instruction[4], out=loadD);
+    DRegister(in=aluOut, load=loadD, out=regD); // D-Register
+
+    // Mux to select y-input for ALU: A-Register value or value from Memory (inM).
+    Mux16(a=regA, b=inM, sel=instruction[12], out=y);
+
+    // The ALU itself.
+    ALU(
+        x=regD,
+        y=y,
+        zx=instruction[11], nx=instruction[10],
+        zy=instruction[9],  ny=instruction[8],
+        f=instruction[7],   no=instruction[6],
+        out=aluOut,
+        zr=zr,
+        ng=ng
+    );
+
+    // --- CPU Outputs ---
+    // The addressM output is the value of the A-Register.
+    Or16(a=regA, b=false, out[0..14]=addressM);
+    // Write to Memory only on a C-instruction with destination bit d3=1.
+    And(a=isComp, b=instruction[3], out=writeM);
+    // The outM output is the value from the ALU.
+    Or16(a=false, b=aluOut, out=outM);
+
+
+    // --- Program Counter (PC) Logic ---
+    // Isolate the jump bits from the instruction.
+    Or(a=instruction[0], b=false, out=JGT);
+    Or(a=instruction[1], b=false, out=JEQ);
+    Or(a=instruction[2], b=false, out=JLT);
+
+    // Determine jump conditions based on ALU flags (zr, ng).
+    Or(a=ng, b=zr, out=ngOrZr);
+    Not(in=ngOrZr, out=isPositive); // isPositive is true if out > 0
+
+    // Check if a jump should happen based on instruction bits and ALU flags.
+    And(a=JEQ, b=zr, out=doJEQ);         // JEQ and zero
+    And(a=JLT, b=ng, out=doJLT);         // JLT and negative
+    And(a=JGT, b=isPositive, out=doJGT); // JGT and positive
+
+    // Combine the jump conditions.
+    Or(a=doJGT, b=doJEQ, out=jump1);
+    Or(a=jump1, b=doJLT, out=anyJumpCondition);
+
+    // Load PC only on a C-instruction where a jump condition is met.
+    And(a=isComp, b=anyJumpCondition, out=loadPC);
+
+    // The Program Counter chip.
+    PC(in=regA, load=loadPC, inc=true, reset=reset, out[0..14]=pc);
+}

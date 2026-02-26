@@ -1,0 +1,272 @@
+function Level.init 0
+    push constant 0
+    pop static 0
+    push constant 1
+    pop static 1
+    push constant 9
+    pop static 2
+    push constant 0
+    return
+function Level.new 0
+    push constant 4
+    call Memory.alloc 1
+    pop pointer 0
+    push constant 20
+    pop this 3
+    push constant 10
+    pop this 0
+    push constant 10
+    pop this 1
+    push this 0
+    push this 1
+    call Math.multiply 2
+    call Array.new 1
+    pop this 2
+    push pointer 0
+    push constant 1
+    push constant 4
+    push static 1
+    call Level.setTile 4
+    pop temp 0
+    push pointer 0
+    push constant 1
+    push constant 5
+    push static 1
+    call Level.setTile 4
+    pop temp 0
+    push pointer 0
+    push constant 2
+    push constant 4
+    push static 1
+    call Level.setTile 4
+    pop temp 0
+    push pointer 0
+    push constant 2
+    push constant 5
+    push static 1
+    call Level.setTile 4
+    pop temp 0
+    push pointer 0
+    push constant 3
+    push constant 4
+    push static 1
+    call Level.setTile 4
+    pop temp 0
+    push pointer 0
+    push constant 3
+    push constant 5
+    push static 1
+    call Level.setTile 4
+    pop temp 0
+    push pointer 0
+    push constant 4
+    push constant 4
+    push static 1
+    call Level.setTile 4
+    pop temp 0
+    push pointer 0
+    push constant 4
+    push constant 5
+    push static 1
+    call Level.setTile 4
+    pop temp 0
+    push pointer 0
+    push constant 4
+    push constant 6
+    push static 1
+    call Level.setTile 4
+    pop temp 0
+    push pointer 0
+    push constant 5
+    push constant 5
+    push static 1
+    call Level.setTile 4
+    pop temp 0
+    push pointer 0
+    push constant 5
+    push constant 6
+    push static 1
+    call Level.setTile 4
+    pop temp 0
+    push pointer 0
+    push constant 6
+    push constant 6
+    push static 2
+    call Level.setTile 4
+    pop temp 0
+    push pointer 0
+    return
+function Level.dispose 0
+    push argument 0
+    pop pointer 0
+    push this 2
+    call Array.dispose 1
+    pop temp 0
+    push pointer 0
+    call Memory.deAlloc 1
+    pop temp 0
+    push constant 0
+    return
+function Level.getWidth 0
+    push argument 0
+    pop pointer 0
+    push this 0
+    return
+function Level.getHeight 0
+    push argument 0
+    pop pointer 0
+    push this 1
+    return
+function Level.getEmptyTile 0
+    push static 0
+    return
+function Level.getNormalTile 0
+    push static 1
+    return
+function Level.getGoalTile 0
+    push static 2
+    return
+function Level.setTile 0
+    push argument 0
+    pop pointer 0
+    push argument 2
+    push this 0
+    call Math.multiply 2
+    push argument 1
+    add
+    push this 2
+    add
+    push argument 3
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 0
+    return
+function Level.getTileType 0
+    push argument 0
+    pop pointer 0
+    push argument 1
+    push constant 0
+    lt
+    push argument 1
+    push this 0
+    push constant 1
+    sub
+    gt
+    or
+    push argument 2
+    push constant 0
+    lt
+    or
+    push argument 2
+    push this 1
+    push constant 1
+    sub
+    gt
+    or
+    not
+    if-goto Level_1
+    push static 0
+    return
+    goto Level_0
+label Level_1
+label Level_0
+    push argument 2
+    push this 0
+    call Math.multiply 2
+    push argument 1
+    add
+    push this 2
+    add
+    pop pointer 1
+    push that 0
+    return
+function Level.draw 3
+    push argument 0
+    pop pointer 0
+    push constant 0
+    pop local 1
+label Level_2
+    push local 1
+    push this 1
+    lt
+    not
+    if-goto Level_3
+    push constant 0
+    pop local 0
+label Level_4
+    push local 0
+    push this 0
+    lt
+    not
+    if-goto Level_5
+    push pointer 0
+    push local 0
+    push local 1
+    call Level.getTileType 3
+    pop local 2
+    push local 2
+    push static 0
+    eq
+    not
+    not
+    if-goto Level_7
+    push local 2
+    push static 2
+    eq
+    not
+    if-goto Level_9
+    push constant 0
+    call Screen.setColor 1
+    pop temp 0
+    goto Level_8
+label Level_9
+    push constant 1
+    neg
+    call Screen.setColor 1
+    pop temp 0
+label Level_8
+    push local 0
+    push this 3
+    call Math.multiply 2
+    push constant 1
+    add
+    push local 1
+    push this 3
+    call Math.multiply 2
+    push constant 1
+    add
+    push local 0
+    push this 3
+    call Math.multiply 2
+    push this 3
+    add
+    push constant 1
+    sub
+    push local 1
+    push this 3
+    call Math.multiply 2
+    push this 3
+    add
+    push constant 1
+    sub
+    call Screen.drawRectangle 4
+    pop temp 0
+    goto Level_6
+label Level_7
+label Level_6
+    push local 0
+    push constant 1
+    add
+    pop local 0
+    goto Level_4
+label Level_5
+    push local 1
+    push constant 1
+    add
+    pop local 1
+    goto Level_2
+label Level_3
+    push constant 0
+    return

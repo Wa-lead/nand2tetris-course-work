@@ -1,0 +1,58 @@
+function FixedMath.toFixed 0
+    push argument 0
+    push constant 256
+    call Math.multiply 2
+    return
+function FixedMath.toInt 0
+    push argument 0
+    push constant 0
+    lt
+    not
+    if-goto FixedMath_1
+    push argument 0
+    push constant 128
+    sub
+    push constant 256
+    call Math.divide 2
+    return
+    goto FixedMath_0
+label FixedMath_1
+label FixedMath_0
+    push argument 0
+    push constant 128
+    add
+    push constant 256
+    call Math.divide 2
+    return
+function FixedMath.multiply 1
+    push argument 0
+    push argument 1
+    call Math.multiply 2
+    pop local 0
+    push local 0
+    push constant 0
+    lt
+    not
+    if-goto FixedMath_3
+    push local 0
+    push constant 128
+    sub
+    push constant 256
+    call Math.divide 2
+    return
+    goto FixedMath_2
+label FixedMath_3
+label FixedMath_2
+    push local 0
+    push constant 128
+    add
+    push constant 256
+    call Math.divide 2
+    return
+function FixedMath.divide 0
+    push argument 0
+    push constant 256
+    call Math.multiply 2
+    push argument 1
+    call Math.divide 2
+    return

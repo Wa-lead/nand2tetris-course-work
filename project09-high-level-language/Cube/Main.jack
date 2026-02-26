@@ -1,0 +1,51 @@
+class Main {
+    field Cube cube;
+
+    constructor Main new() {
+        do Trig.init(); // CRITICAL: Initialize the Sin/Cos tables.
+        let cube = Cube.new();
+        return this;
+    }
+
+    method void dispose() {
+        do cube.dispose();
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    /** Runs the main application loop. */
+    method void run() {
+        var int key;
+        var boolean exit;
+        let exit = false;
+
+        while (~exit) {
+            let key = Keyboard.keyPressed();
+            
+            if (key = 130) { do cube.rotate(0, -5); } // Left Arrow
+            if (key = 132) { do cube.rotate(0, 5);  } // Right Arrow
+            if (key = 131) { do cube.rotate(-5, 0); } // Up Arrow
+            if (key = 133) { do cube.rotate(5, 0);  } // Down Arrow
+            if (key = 140) { let exit = true;       } // ESC Key
+
+            // Drawing Phase
+            do Screen.setColor(false); // White color for clearing
+            do Screen.drawRectangle(0, 0, 511, 255);
+            do Screen.setColor(true);  // Black color for drawing
+            do cube.updateAndDraw();
+            
+            do Sys.wait(40); // Control framerate (~25 FPS)
+        }
+        return;
+    }
+
+    /** Entry point. */
+    function void main() {
+        var Main game;
+        let game = Main.new();
+        do game.run();
+        do game.dispose();
+        return;
+    }
+}
+

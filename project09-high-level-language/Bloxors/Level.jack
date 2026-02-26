@@ -1,0 +1,86 @@
+/**
+ * Represents the game level.
+ * (CORRECTED: Complies with Jack language rules)
+ */
+class Level {
+    field int width, height;
+    field Array grid;
+    field int TILE_SIZE;
+
+    // Tile type constants are now just static variables.
+    static int EMPTY;
+    static int NORMAL;
+    static int GOAL;
+
+    /** MUST be called once at the start of the game to set static values. */
+    function void init() {
+        let EMPTY = 0;
+        let NORMAL = 1;
+        let GOAL = 9;
+        return;
+    }
+
+    constructor Level new() {
+        let TILE_SIZE = 20;
+        let width = 10;
+        let height = 10;
+        let grid = Array.new(width * height);
+        
+        // Hard-code a simple level.
+        do setTile(1, 4, NORMAL); do setTile(1, 5, NORMAL);
+        do setTile(2, 4, NORMAL); do setTile(2, 5, NORMAL);
+        do setTile(3, 4, NORMAL); do setTile(3, 5, NORMAL);
+        do setTile(4, 4, NORMAL); do setTile(4, 5, NORMAL); do setTile(4, 6, NORMAL);
+        do setTile(5, 5, NORMAL); do setTile(5, 6, NORMAL);
+        do setTile(6, 6, GOAL);
+
+        return this;
+    }
+
+    method void dispose() {
+        do grid.dispose();
+        do Memory.deAlloc(this);
+        return;
+    }
+    
+    // --- Getters for private fields ---
+    method int getWidth() { return width; }
+    method int getHeight() { return height; }
+    function int getEmptyTile() { return EMPTY; }
+    function int getNormalTile() { return NORMAL; }
+    function int getGoalTile() { return GOAL; }
+
+    method void setTile(int x, int y, int type) {
+        let grid[y * width + x] = type;
+        return;
+    }
+
+    method int getTileType(int x, int y) {
+        if ((x < 0) | (x > (width-1)) | (y < 0) | (y > (height-1))) {
+            return EMPTY;
+        }
+        return grid[y * width + x];
+    }
+    
+    method void draw() {
+        var int x, y, tileType;
+        let y = 0;
+        while (y < height) {
+            let x = 0;
+            while (x < width) {
+                let tileType = getTileType(x, y);
+                if (~(tileType = EMPTY)) {
+                    if (tileType = GOAL) {
+                        do Screen.setColor(false); // Goal is white
+                    } else {
+                        do Screen.setColor(true);  // Normal tile is black
+                    }
+                    do Screen.drawRectangle((x*TILE_SIZE)+1, (y*TILE_SIZE)+1, (x*TILE_SIZE)+TILE_SIZE-1, (y*TILE_SIZE)+TILE_SIZE-1);
+                }
+                let x = x + 1;
+            }
+            let y = y + 1;
+        }
+        return;
+    }
+}

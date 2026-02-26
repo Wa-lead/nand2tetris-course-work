@@ -1,0 +1,462 @@
+function Matrix.new 0
+    push constant 1
+    call Memory.alloc 1
+    pop pointer 0
+    push constant 16
+    call Array.new 1
+    pop this 0
+    push pointer 0
+    return
+function Matrix.dispose 0
+    push argument 0
+    pop pointer 0
+    push this 0
+    call Array.dispose 1
+    pop temp 0
+    push pointer 0
+    call Memory.deAlloc 1
+    pop temp 0
+    push constant 0
+    return
+function Matrix.get 0
+    push argument 0
+    pop pointer 0
+    push argument 1
+    push constant 4
+    call Math.multiply 2
+    push argument 2
+    add
+    push this 0
+    add
+    pop pointer 1
+    push that 0
+    return
+function Matrix.set 0
+    push argument 0
+    pop pointer 0
+    push argument 1
+    push constant 4
+    call Math.multiply 2
+    push argument 2
+    add
+    push this 0
+    add
+    push argument 3
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 0
+    return
+function Matrix.multiplyVector 9
+    push argument 0
+    pop pointer 0
+    push pointer 0
+    push constant 0
+    push constant 0
+    call Matrix.get 3
+    push argument 1
+    call Vector.getX 1
+    call FixedMath.multiply 2
+    pop local 5
+    push pointer 0
+    push constant 0
+    push constant 1
+    call Matrix.get 3
+    push argument 1
+    call Vector.getY 1
+    call FixedMath.multiply 2
+    pop local 6
+    push pointer 0
+    push constant 0
+    push constant 2
+    call Matrix.get 3
+    push argument 1
+    call Vector.getZ 1
+    call FixedMath.multiply 2
+    pop local 7
+    push pointer 0
+    push constant 0
+    push constant 3
+    call Matrix.get 3
+    push argument 1
+    call Vector.getW 1
+    call FixedMath.multiply 2
+    pop local 8
+    push local 5
+    push local 6
+    add
+    push local 7
+    add
+    push local 8
+    add
+    pop local 1
+    push pointer 0
+    push constant 1
+    push constant 0
+    call Matrix.get 3
+    push argument 1
+    call Vector.getX 1
+    call FixedMath.multiply 2
+    pop local 5
+    push pointer 0
+    push constant 1
+    push constant 1
+    call Matrix.get 3
+    push argument 1
+    call Vector.getY 1
+    call FixedMath.multiply 2
+    pop local 6
+    push pointer 0
+    push constant 1
+    push constant 2
+    call Matrix.get 3
+    push argument 1
+    call Vector.getZ 1
+    call FixedMath.multiply 2
+    pop local 7
+    push pointer 0
+    push constant 1
+    push constant 3
+    call Matrix.get 3
+    push argument 1
+    call Vector.getW 1
+    call FixedMath.multiply 2
+    pop local 8
+    push local 5
+    push local 6
+    add
+    push local 7
+    add
+    push local 8
+    add
+    pop local 2
+    push pointer 0
+    push constant 2
+    push constant 0
+    call Matrix.get 3
+    push argument 1
+    call Vector.getX 1
+    call FixedMath.multiply 2
+    pop local 5
+    push pointer 0
+    push constant 2
+    push constant 1
+    call Matrix.get 3
+    push argument 1
+    call Vector.getY 1
+    call FixedMath.multiply 2
+    pop local 6
+    push pointer 0
+    push constant 2
+    push constant 2
+    call Matrix.get 3
+    push argument 1
+    call Vector.getZ 1
+    call FixedMath.multiply 2
+    pop local 7
+    push pointer 0
+    push constant 2
+    push constant 3
+    call Matrix.get 3
+    push argument 1
+    call Vector.getW 1
+    call FixedMath.multiply 2
+    pop local 8
+    push local 5
+    push local 6
+    add
+    push local 7
+    add
+    push local 8
+    add
+    pop local 3
+    push pointer 0
+    push constant 3
+    push constant 0
+    call Matrix.get 3
+    push argument 1
+    call Vector.getX 1
+    call FixedMath.multiply 2
+    pop local 5
+    push pointer 0
+    push constant 3
+    push constant 1
+    call Matrix.get 3
+    push argument 1
+    call Vector.getY 1
+    call FixedMath.multiply 2
+    pop local 6
+    push pointer 0
+    push constant 3
+    push constant 2
+    call Matrix.get 3
+    push argument 1
+    call Vector.getZ 1
+    call FixedMath.multiply 2
+    pop local 7
+    push pointer 0
+    push constant 3
+    push constant 3
+    call Matrix.get 3
+    push argument 1
+    call Vector.getW 1
+    call FixedMath.multiply 2
+    pop local 8
+    push local 5
+    push local 6
+    add
+    push local 7
+    add
+    push local 8
+    add
+    pop local 4
+    push local 1
+    push local 2
+    push local 3
+    push local 4
+    call Vector.new 4
+    pop local 0
+    push local 0
+    return
+function Matrix.dot 5
+    push argument 0
+    pop pointer 0
+    call Matrix.new 0
+    pop local 0
+    push constant 0
+    pop local 1
+label Matrix_0
+    push local 1
+    push constant 4
+    lt
+    not
+    if-goto Matrix_1
+    push constant 0
+    pop local 2
+label Matrix_2
+    push local 2
+    push constant 4
+    lt
+    not
+    if-goto Matrix_3
+    push constant 0
+    pop local 4
+    push constant 0
+    pop local 3
+label Matrix_4
+    push local 3
+    push constant 4
+    lt
+    not
+    if-goto Matrix_5
+    push local 4
+    push pointer 0
+    push local 1
+    push local 3
+    call Matrix.get 3
+    push argument 1
+    push local 3
+    push local 2
+    call Matrix.get 3
+    call FixedMath.multiply 2
+    add
+    pop local 4
+    push local 3
+    push constant 1
+    add
+    pop local 3
+    goto Matrix_4
+label Matrix_5
+    push local 0
+    push local 1
+    push local 2
+    push local 4
+    call Matrix.set 4
+    pop temp 0
+    push local 2
+    push constant 1
+    add
+    pop local 2
+    goto Matrix_2
+label Matrix_3
+    push local 1
+    push constant 1
+    add
+    pop local 1
+    goto Matrix_0
+label Matrix_1
+    push local 0
+    return
+function Matrix.identity 1
+    call Matrix.new 0
+    pop local 0
+    push local 0
+    push constant 0
+    push constant 0
+    push constant 256
+    call Matrix.set 4
+    pop temp 0
+    push local 0
+    push constant 1
+    push constant 1
+    push constant 256
+    call Matrix.set 4
+    pop temp 0
+    push local 0
+    push constant 2
+    push constant 2
+    push constant 256
+    call Matrix.set 4
+    pop temp 0
+    push local 0
+    push constant 3
+    push constant 3
+    push constant 256
+    call Matrix.set 4
+    pop temp 0
+    push local 0
+    return
+function Matrix.createTranslation 1
+    call Matrix.identity 0
+    pop local 0
+    push local 0
+    push constant 0
+    push constant 3
+    push argument 0
+    call Matrix.set 4
+    pop temp 0
+    push local 0
+    push constant 1
+    push constant 3
+    push argument 1
+    call Matrix.set 4
+    pop temp 0
+    push local 0
+    push constant 2
+    push constant 3
+    push argument 2
+    call Matrix.set 4
+    pop temp 0
+    push local 0
+    return
+function Matrix.createRotationX 3
+    call Matrix.identity 0
+    pop local 0
+    push argument 0
+    call Trig.sin 1
+    pop local 1
+    push argument 0
+    call Trig.cos 1
+    pop local 2
+    push local 0
+    push constant 1
+    push constant 1
+    push local 2
+    call Matrix.set 4
+    pop temp 0
+    push local 0
+    push constant 1
+    push constant 2
+    push local 1
+    neg
+    call Matrix.set 4
+    pop temp 0
+    push local 0
+    push constant 2
+    push constant 1
+    push local 1
+    call Matrix.set 4
+    pop temp 0
+    push local 0
+    push constant 2
+    push constant 2
+    push local 2
+    call Matrix.set 4
+    pop temp 0
+    push local 0
+    return
+function Matrix.createRotationY 3
+    call Matrix.identity 0
+    pop local 0
+    push argument 0
+    call Trig.sin 1
+    pop local 1
+    push argument 0
+    call Trig.cos 1
+    pop local 2
+    push local 0
+    push constant 0
+    push constant 0
+    push local 2
+    call Matrix.set 4
+    pop temp 0
+    push local 0
+    push constant 0
+    push constant 2
+    push local 1
+    call Matrix.set 4
+    pop temp 0
+    push local 0
+    push constant 2
+    push constant 0
+    push local 1
+    neg
+    call Matrix.set 4
+    pop temp 0
+    push local 0
+    push constant 2
+    push constant 2
+    push local 2
+    call Matrix.set 4
+    pop temp 0
+    push local 0
+    return
+function Matrix.createProjection 4
+    call Matrix.new 0
+    pop local 0
+    push argument 0
+    pop local 1
+    push argument 1
+    push argument 1
+    push argument 2
+    sub
+    call FixedMath.divide 2
+    pop local 2
+    push local 2
+    push argument 2
+    call FixedMath.multiply 2
+    neg
+    pop local 3
+    push local 0
+    push constant 0
+    push constant 0
+    push local 1
+    call Matrix.set 4
+    pop temp 0
+    push local 0
+    push constant 1
+    push constant 1
+    push local 1
+    call Matrix.set 4
+    pop temp 0
+    push local 0
+    push constant 2
+    push constant 2
+    push local 2
+    call Matrix.set 4
+    pop temp 0
+    push local 0
+    push constant 2
+    push constant 3
+    push local 3
+    call Matrix.set 4
+    pop temp 0
+    push local 0
+    push constant 3
+    push constant 2
+    push constant 256
+    call Matrix.set 4
+    pop temp 0
+    push local 0
+    return

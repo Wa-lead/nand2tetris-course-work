@@ -1,0 +1,38 @@
+/**
+ * FixedMath Library
+ * Provides 8.8 fixed-point arithmetic using the Jack OS Math library.
+ * NOTE: Math.multiply can overflow if intermediate products exceed 32767.
+ * This library is safe for values typically seen in normalized graphics (e.g., -10.0 to 10.0).
+ */
+class FixedMath {
+
+    /** Converts an integer to its fixed-point representation (e.g., 5 -> 1280). */
+    function int toFixed(int i) {
+        return i * 256;
+    }
+
+    /** Converts a fixed-point number back to the nearest integer. */
+    function int toInt(int f) {
+        if (f < 0) {
+            return Math.divide(f - 128, 256);
+        }
+        return Math.divide(f + 128, 256);
+    }
+
+    /** Multiplies two fixed-point numbers. */
+    function int multiply(int f1, int f2) {
+        var int p;
+        let p = Math.multiply(f1, f2);
+        // Round to the nearest value before scaling back down.
+        if (p < 0) {
+            return Math.divide(p - 128, 256);
+        }
+        return Math.divide(p + 128, 256);
+    }
+
+    /** Divides two fixed-point numbers. */
+    function int divide(int f1, int f2) {
+        // Increase precision before division.
+        return Math.divide(Math.multiply(f1, 256), f2);
+    }
+}

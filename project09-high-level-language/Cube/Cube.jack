@@ -1,0 +1,107 @@
+/** The Cube object. Manages vertices, transformation, and drawing. */
+class Cube {
+    field Array vertices;
+    field Matrix projectionMatrix;
+    field int angleX, angleY;
+
+    constructor Cube new() {
+        let angleX = 0; 
+        let angleY = 0;
+        let projectionMatrix = Matrix.createProjection(FixedMath.toFixed(1), FixedMath.toFixed(100), FixedMath.toFixed(1));
+        
+        let vertices = Array.new(8);
+        let vertices[0] = Vector.new(FixedMath.toFixed(-1), FixedMath.toFixed(-1), FixedMath.toFixed(-1), 256);
+        let vertices[1] = Vector.new(FixedMath.toFixed(1),  FixedMath.toFixed(-1), FixedMath.toFixed(-1), 256);
+        let vertices[2] = Vector.new(FixedMath.toFixed(1),  FixedMath.toFixed(1),  FixedMath.toFixed(-1), 256);
+        let vertices[3] = Vector.new(FixedMath.toFixed(-1), FixedMath.toFixed(1),  FixedMath.toFixed(-1), 256);
+        let vertices[4] = Vector.new(FixedMath.toFixed(-1), FixedMath.toFixed(-1), FixedMath.toFixed(1),  256);
+        let vertices[5] = Vector.new(FixedMath.toFixed(1),  FixedMath.toFixed(-1), FixedMath.toFixed(1),  256);
+        let vertices[6] = Vector.new(FixedMath.toFixed(1),  FixedMath.toFixed(1),  FixedMath.toFixed(1),  256);
+        let vertices[7] = Vector.new(FixedMath.toFixed(-1), FixedMath.toFixed(1),  FixedMath.toFixed(1),  256);
+        return this;
+    }
+
+    method void dispose() {
+        var int i;
+        var Vector currentVertex;
+        
+        let i = 0;
+        while(i < 8) { 
+            let currentVertex = vertices[i];
+            do currentVertex.dispose(); 
+            let i = i + 1; 
+        }
+
+        do vertices.dispose(); 
+        do projectionMatrix.dispose(); 
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    method void rotate(int dx, int dy) { 
+        let angleX = angleX + dx; 
+        let angleY = angleY + dy; 
+        return; 
+    }
+
+    method void updateAndDraw() {
+        var Matrix rotX, rotY, translation, temp, transform;
+        var Array screenCoords; 
+        var int i;
+        var Vector v, transformed, projected; // <-- Moved declaration up
+        
+        let rotX = Matrix.createRotationX(angleX);
+        let rotY = Matrix.createRotationY(angleY);
+        let translation = Matrix.createTranslation(0, 0, FixedMath.toFixed(5));
+        
+        let temp = rotY.dot(rotX);
+        let transform = translation.dot(temp);
+
+        let screenCoords = Array.new(16);
+        let i = 0;
+        while (i < 8) {
+            let v = vertices[i]; // Correctly assign to typed variable first
+            let transformed = transform.multiplyVector(v);
+            let projected = projectionMatrix.multiplyVector(transformed);
+            
+            if (projected.getW() > 0) {
+                let screenCoords[i*2]   = FixedMath.toInt(FixedMath.divide(projected.getX(), projected.getW())) + 256;
+                let screenCoords[i*2+1] = FixedMath.toInt(FixedMath.divide(projected.getY(), projected.getW())) + 128;
+            }
+
+            do transformed.dispose(); 
+            do projected.dispose();
+            let i = i + 1;
+        }
+
+        do drawEdges(screenCoords);
+
+        // Cleanup
+        do screenCoords.dispose(); 
+        do rotX.dispose(); 
+        do rotY.dispose();
+        do translation.dispose(); 
+        do temp.dispose(); 
+        do transform.dispose();
+        return;
+    }
+
+    method void drawEdges(Array c) {
+        // Front face
+        do Screen.drawLine(c[0], c[1], c[2], c[3]); 
+        do Screen.drawLine(c[2], c[3], c[4], c[5]);
+        do Screen.drawLine(c[4], c[5], c[6], c[7]); 
+        do Screen.drawLine(c[6], c[7], c[0], c[1]);
+        // Back face
+        do Screen.drawLine(c[8], c[9], c[10], c[11]); 
+        do Screen.drawLine(c[10], c[11], c[12], c[13]);
+        do Screen.drawLine(c[12], c[13], c[14], c[15]); 
+        do Screen.drawLine(c[14], c[15], c[8], c[9]);
+        // Connecting edges
+        do Screen.drawLine(c[0], c[1], c[8], c[9]); 
+        do Screen.drawLine(c[2], c[3], c[10], c[11]);
+        do Screen.drawLine(c[4], c[5], c[12], c[13]); 
+        do Screen.drawLine(c[6], c[7], c[14], c[15]);
+        return;
+    }
+}

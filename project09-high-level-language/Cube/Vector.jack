@@ -1,0 +1,14 @@
+/** Represents a 4D Vector for use with homogeneous coordinates. */
+class Vector {
+    field int x, y, z, w;
+
+    constructor Vector new(int ax, int ay, int az, int aw) {
+        let x = ax; let y = ay; let z = az; let w = aw;
+        return this;
+    }
+    method void dispose() { do Memory.deAlloc(this); return; }
+    method int getX() { return x; }
+    method int getY() { return y; }
+    method int getZ() { return z; }
+    method int getW() { return w; }
+}

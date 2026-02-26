@@ -1,0 +1,387 @@
+function Game.new 0
+    push constant 5
+    call Memory.alloc 1
+    pop pointer 0
+    call Level.new 0
+    pop this 0
+    push constant 1
+    push constant 4
+    call Block.new 2
+    pop this 1
+    push constant 0
+    pop this 2
+    push constant 0
+    pop this 3
+    push constant 0
+    pop this 4
+    push pointer 0
+    return
+function Game.dispose 0
+    push argument 0
+    pop pointer 0
+    push this 0
+    call Level.dispose 1
+    pop temp 0
+    push this 1
+    call Block.dispose 1
+    pop temp 0
+    push pointer 0
+    call Memory.deAlloc 1
+    pop temp 0
+    push constant 0
+    return
+function Game.run 1
+    push argument 0
+    pop pointer 0
+label Game_0
+    push this 2
+    not
+    not
+    if-goto Game_1
+    push pointer 0
+    call Game.draw 1
+    pop temp 0
+    push constant 0
+    pop local 0
+label Game_2
+    push local 0
+    push constant 0
+    eq
+    not
+    if-goto Game_3
+    call Keyboard.keyPressed 0
+    pop local 0
+    goto Game_2
+label Game_3
+    push this 3
+    push this 4
+    or
+    not
+    not
+    if-goto Game_5
+    push pointer 0
+    push local 0
+    call Game.handleInput 2
+    pop temp 0
+    goto Game_4
+label Game_5
+label Game_4
+    push local 0
+    push constant 140
+    eq
+    not
+    if-goto Game_7
+    push constant 1
+    neg
+    pop this 2
+    goto Game_6
+label Game_7
+label Game_6
+    push constant 100
+    call Sys.wait 1
+    pop temp 0
+    goto Game_0
+label Game_1
+    push constant 0
+    return
+function Game.handleInput 1
+    push argument 0
+    pop pointer 0
+    push argument 1
+    push constant 131
+    eq
+    not
+    if-goto Game_9
+    push constant 1
+    pop local 0
+    goto Game_8
+label Game_9
+label Game_8
+    push argument 1
+    push constant 133
+    eq
+    not
+    if-goto Game_11
+    push constant 2
+    pop local 0
+    goto Game_10
+label Game_11
+label Game_10
+    push argument 1
+    push constant 130
+    eq
+    not
+    if-goto Game_13
+    push constant 3
+    pop local 0
+    goto Game_12
+label Game_13
+label Game_12
+    push argument 1
+    push constant 132
+    eq
+    not
+    if-goto Game_15
+    push constant 4
+    pop local 0
+    goto Game_14
+label Game_15
+label Game_14
+    push local 0
+    push constant 0
+    eq
+    not
+    not
+    if-goto Game_17
+    push this 1
+    push local 0
+    call Block.move 2
+    pop temp 0
+    push pointer 0
+    call Game.checkGameState 1
+    pop temp 0
+    goto Game_16
+label Game_17
+label Game_16
+    push constant 0
+    return
+function Game.checkGameState 0
+    push argument 0
+    pop pointer 0
+    push this 1
+    push this 0
+    call Block.isValidPosition 2
+    not
+    not
+    if-goto Game_19
+    push constant 1
+    neg
+    pop this 4
+    push constant 0
+    return
+    goto Game_18
+label Game_19
+label Game_18
+    push this 1
+    call Block.getState 1
+    call Block.getStandingState 0
+    eq
+    push this 0
+    push this 1
+    call Block.getX 1
+    push this 1
+    call Block.getY 1
+    call Level.getTileType 3
+    call Level.getGoalTile 0
+    eq
+    and
+    not
+    if-goto Game_21
+    push constant 1
+    neg
+    pop this 3
+    goto Game_20
+label Game_21
+label Game_20
+    push constant 0
+    return
+function Game.draw 0
+    push argument 0
+    pop pointer 0
+    push constant 0
+    call Screen.setColor 1
+    pop temp 0
+    push constant 0
+    push constant 0
+    push constant 511
+    push constant 255
+    call Screen.drawRectangle 4
+    pop temp 0
+    push this 0
+    call Level.draw 1
+    pop temp 0
+    push this 1
+    call Block.draw 1
+    pop temp 0
+    push constant 0
+    push constant 0
+    call Output.moveCursor 2
+    pop temp 0
+    push constant 36
+    call String.new 1
+    push constant 85
+    call String.appendChar 2
+    push constant 115
+    call String.appendChar 2
+    push constant 101
+    call String.appendChar 2
+    push constant 32
+    call String.appendChar 2
+    push constant 97
+    call String.appendChar 2
+    push constant 114
+    call String.appendChar 2
+    push constant 114
+    call String.appendChar 2
+    push constant 111
+    call String.appendChar 2
+    push constant 119
+    call String.appendChar 2
+    push constant 32
+    call String.appendChar 2
+    push constant 107
+    call String.appendChar 2
+    push constant 101
+    call String.appendChar 2
+    push constant 121
+    call String.appendChar 2
+    push constant 115
+    call String.appendChar 2
+    push constant 32
+    call String.appendChar 2
+    push constant 116
+    call String.appendChar 2
+    push constant 111
+    call String.appendChar 2
+    push constant 32
+    call String.appendChar 2
+    push constant 109
+    call String.appendChar 2
+    push constant 111
+    call String.appendChar 2
+    push constant 118
+    call String.appendChar 2
+    push constant 101
+    call String.appendChar 2
+    push constant 46
+    call String.appendChar 2
+    push constant 32
+    call String.appendChar 2
+    push constant 69
+    call String.appendChar 2
+    push constant 83
+    call String.appendChar 2
+    push constant 67
+    call String.appendChar 2
+    push constant 32
+    call String.appendChar 2
+    push constant 116
+    call String.appendChar 2
+    push constant 111
+    call String.appendChar 2
+    push constant 32
+    call String.appendChar 2
+    push constant 113
+    call String.appendChar 2
+    push constant 117
+    call String.appendChar 2
+    push constant 105
+    call String.appendChar 2
+    push constant 116
+    call String.appendChar 2
+    push constant 46
+    call String.appendChar 2
+    call Output.printString 1
+    pop temp 0
+    push this 3
+    not
+    if-goto Game_23
+    push constant 1
+    neg
+    call Screen.setColor 1
+    pop temp 0
+    push constant 200
+    push constant 110
+    push constant 312
+    push constant 130
+    call Screen.drawRectangle 4
+    pop temp 0
+    push constant 0
+    call Screen.setColor 1
+    pop temp 0
+    push constant 201
+    push constant 111
+    push constant 311
+    push constant 129
+    call Screen.drawRectangle 4
+    pop temp 0
+    push constant 11
+    push constant 28
+    call Output.moveCursor 2
+    pop temp 0
+    push constant 8
+    call String.new 1
+    push constant 89
+    call String.appendChar 2
+    push constant 79
+    call String.appendChar 2
+    push constant 85
+    call String.appendChar 2
+    push constant 32
+    call String.appendChar 2
+    push constant 87
+    call String.appendChar 2
+    push constant 73
+    call String.appendChar 2
+    push constant 78
+    call String.appendChar 2
+    push constant 33
+    call String.appendChar 2
+    call Output.printString 1
+    pop temp 0
+    goto Game_22
+label Game_23
+label Game_22
+    push this 4
+    not
+    if-goto Game_25
+    push constant 1
+    neg
+    call Screen.setColor 1
+    pop temp 0
+    push constant 200
+    push constant 110
+    push constant 312
+    push constant 130
+    call Screen.drawRectangle 4
+    pop temp 0
+    push constant 0
+    call Screen.setColor 1
+    pop temp 0
+    push constant 201
+    push constant 111
+    push constant 311
+    push constant 129
+    call Screen.drawRectangle 4
+    pop temp 0
+    push constant 11
+    push constant 27
+    call Output.moveCursor 2
+    pop temp 0
+    push constant 9
+    call String.new 1
+    push constant 71
+    call String.appendChar 2
+    push constant 65
+    call String.appendChar 2
+    push constant 77
+    call String.appendChar 2
+    push constant 69
+    call String.appendChar 2
+    push constant 32
+    call String.appendChar 2
+    push constant 79
+    call String.appendChar 2
+    push constant 86
+    call String.appendChar 2
+    push constant 69
+    call String.appendChar 2
+    push constant 82
+    call String.appendChar 2
+    call Output.printString 1
+    pop temp 0
+    goto Game_24
+label Game_25
+label Game_24
+    push constant 0
+    return

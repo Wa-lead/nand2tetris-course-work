@@ -1,0 +1,132 @@
+function Main.new 0
+    push constant 1
+    call Memory.alloc 1
+    pop pointer 0
+    call Trig.init 0
+    pop temp 0
+    call Cube.new 0
+    pop this 0
+    push pointer 0
+    return
+function Main.dispose 0
+    push argument 0
+    pop pointer 0
+    push this 0
+    call Cube.dispose 1
+    pop temp 0
+    push pointer 0
+    call Memory.deAlloc 1
+    pop temp 0
+    push constant 0
+    return
+function Main.run 2
+    push argument 0
+    pop pointer 0
+    push constant 0
+    pop local 1
+label Main_0
+    push local 1
+    not
+    not
+    if-goto Main_1
+    call Keyboard.keyPressed 0
+    pop local 0
+    push local 0
+    push constant 130
+    eq
+    not
+    if-goto Main_3
+    push this 0
+    push constant 0
+    push constant 5
+    neg
+    call Cube.rotate 3
+    pop temp 0
+    goto Main_2
+label Main_3
+label Main_2
+    push local 0
+    push constant 132
+    eq
+    not
+    if-goto Main_5
+    push this 0
+    push constant 0
+    push constant 5
+    call Cube.rotate 3
+    pop temp 0
+    goto Main_4
+label Main_5
+label Main_4
+    push local 0
+    push constant 131
+    eq
+    not
+    if-goto Main_7
+    push this 0
+    push constant 5
+    neg
+    push constant 0
+    call Cube.rotate 3
+    pop temp 0
+    goto Main_6
+label Main_7
+label Main_6
+    push local 0
+    push constant 133
+    eq
+    not
+    if-goto Main_9
+    push this 0
+    push constant 5
+    push constant 0
+    call Cube.rotate 3
+    pop temp 0
+    goto Main_8
+label Main_9
+label Main_8
+    push local 0
+    push constant 140
+    eq
+    not
+    if-goto Main_11
+    push constant 1
+    neg
+    pop local 1
+    goto Main_10
+label Main_11
+label Main_10
+    push constant 0
+    call Screen.setColor 1
+    pop temp 0
+    push constant 0
+    push constant 0
+    push constant 511
+    push constant 255
+    call Screen.drawRectangle 4
+    pop temp 0
+    push constant 1
+    neg
+    call Screen.setColor 1
+    pop temp 0
+    push this 0
+    call Cube.updateAndDraw 1
+    pop temp 0
+    push constant 40
+    call Sys.wait 1
+    pop temp 0
+    goto Main_0
+label Main_1
+    push constant 0
+    return
+function Main.main 1
+    call Main.new 0
+    pop local 0
+    push local 0
+    call Main.run 1
+    pop temp 0
+    push local 0
+    call Main.dispose 1
+    pop temp 0
+    push constant 0
+    return
